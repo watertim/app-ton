@@ -1,6 +1,5 @@
 #include "message.h"
 #include "utils.h"
-#include "error.h"
 #include "slice_data.h"
 #include "byte_stream.h"
 #include "wallet.h"
