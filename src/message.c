@@ -69,7 +69,7 @@ void deserialize_amount(struct SliceData_t* slice, uint8_t* cell_data, uint8_t c
 
     char* amount_str = data_context.sign_tm_context.amount_str;
     uint8_t text_size = convert_hex_amount_to_displayable(amount, amount_length, amount_str);
-    strcpy(amount_str + text_size, " TON");
+    strlcpy(amount_str + text_size, " TON", sizeof(data_context.sign_tm_context.amount_str) - text_size);
 }
 
 void deserialize_message(struct ByteStream_t* src, uint8_t display_flags) {
