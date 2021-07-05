@@ -7,7 +7,7 @@
 static uint8_t set_result_get_address() {
     uint8_t tx = 0;
     G_io_apdu_buffer[tx++] = ADDRESS_LENGTH;
-    os_memmove(G_io_apdu_buffer + tx, data_context.addr_context.address, ADDRESS_LENGTH);
+    memcpy(G_io_apdu_buffer + tx, data_context.addr_context.address, ADDRESS_LENGTH);
     tx += ADDRESS_LENGTH;
     return tx;
 }

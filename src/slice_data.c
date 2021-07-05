@@ -13,7 +13,7 @@ void SliceData_init(struct SliceData_t* self, uint8_t* data, uint16_t data_size_
 void SliceData_fill(struct SliceData_t* self, uint8_t value, uint16_t data_size_bytes) {
     VALIDATE(self && self->data, ERR_SLICE_IS_EMPTY);
     VALIDATE(self->data_size_bytes >= data_size_bytes, ERR_INVALID_DATA);
-    os_memset(self->data, value, data_size_bytes);
+    memset(self->data, value, data_size_bytes);
 }
 
 void SliceData_truncate(struct SliceData_t* self, uint16_t size) {

@@ -7,7 +7,7 @@
 void Cell_init(struct Cell_t* self, uint8_t* cell_begin) {
     VALIDATE(self && cell_begin, ERR_CELL_IS_EMPTY);
     self->cell_begin = cell_begin;
-    os_memset(self->hash, 0, sizeof(self->hash));
+    memset(self->hash, 0, sizeof(self->hash));
 }
 
 uint8_t Cell_get_d1(const struct Cell_t* self) {
@@ -45,7 +45,7 @@ uint8_t* Cell_get_hash(Cell_t* cell, const uint8_t cell_index) {
     hash_buffer[1] = Cell_get_d2(cell);
     hash_buffer_offset += 2;
     uint8_t data_size = Cell_get_data_size(cell);
-    os_memcpy(hash_buffer + hash_buffer_offset, Cell_get_data(cell), data_size);
+    memcpy(hash_buffer + hash_buffer_offset, Cell_get_data(cell), data_size);
     hash_buffer_offset += data_size;
 
     uint8_t refs_count = 0;
@@ -58,13 +58,13 @@ uint8_t* Cell_get_hash(Cell_t* cell, const uint8_t cell_index) {
         uint8_t buf[2];
         buf[0] = 0;
         buf[1] = child_depth;
-        os_memcpy(hash_buffer + hash_buffer_offset, buf, sizeof(buf));
+        memcpy(hash_buffer + hash_buffer_offset, buf, sizeof(buf));
         hash_buffer_offset += sizeof(buf);
     }
     
     for (uint8_t child = 0; child < refs_count; ++child) {
         uint8_t* cell_hash = boc_context.cells[refs[child]].hash;
-        os_memcpy(hash_buffer + hash_buffer_offset, cell_hash, HASH_SIZE);
+        memcpy(hash_buffer + hash_buffer_offset, cell_hash, HASH_SIZE);
         hash_buffer_offset += HASH_SIZE;
     }
     

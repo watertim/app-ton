@@ -117,6 +117,7 @@ CC       := $(CLANGPATH)clang
 
 #CFLAGS   += -O0
 CFLAGS   += -O3 -Os
+CFLAGS   += -Wno-format # For custom %.h formatter
 
 AS     := $(GCCPATH)arm-none-eabi-gcc
 

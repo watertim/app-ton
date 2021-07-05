@@ -81,15 +81,15 @@ void get_address(const uint32_t account_number, uint8_t* address) {
     VALIDATE(pk_cell_size >= PUBLIC_KEY_LENGTH + CELL_DATA_OFFSET, ERR_INVALID_DATA);
 
     uint8_t temp_data[128];
-    os_memcpy(temp_data, pk_cell->cell_begin, pk_cell_size - PUBLIC_KEY_LENGTH);
-    os_memcpy(temp_data + pk_cell_size - PUBLIC_KEY_LENGTH, data_context.pk_context.public_key, PUBLIC_KEY_LENGTH);
+    memcpy(temp_data, pk_cell->cell_begin, pk_cell_size - PUBLIC_KEY_LENGTH);
+    memcpy(temp_data + pk_cell_size - PUBLIC_KEY_LENGTH, data_context.pk_context.public_key, PUBLIC_KEY_LENGTH);
     pk_cell->cell_begin = temp_data;
 
     for (int16_t i = cells_count - 1; i >= 0; --i) {
         Cell_get_hash(&cells[i], i);
     }
 
-    os_memcpy(address, Cell_get_hash(boc_context.cells, 0), ADDRESS_LENGTH);
+    memcpy(address, Cell_get_hash(boc_context.cells, 0), ADDRESS_LENGTH);
 }
 
 static const uint8_t bounceable_tag = 0x11;
@@ -112,7 +112,7 @@ void address_to_string(int8_t wc, uint8_t display_flags, uint8_t* address, uint8
         uint8_t addr[36];
         addr[0] = tag;
         addr[1] = wc;
-        os_memcpy(addr + 2, address, in_len);
+        memcpy(addr + 2, address, in_len);
 
         uint8_t crc_offset = in_len + 2;
         uint16_t crc = crc16((char*)addr, crc_offset);
@@ -136,7 +136,7 @@ void address_to_string(int8_t wc, uint8_t display_flags, uint8_t* address, uint8
         char wc_temp[6]; // snprintf always returns zero
         snprintf(wc_temp, sizeof(wc_temp), "%d:", wc);
         int wc_len = strlen(wc_temp);
-        os_memcpy(str, wc_temp, wc_len);
+        memcpy(str, wc_temp, wc_len);
         snprintf(str + wc_len, out_len - wc_len, "%.*h", in_len, address);
     }
 }

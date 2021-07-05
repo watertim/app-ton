@@ -25,8 +25,8 @@ DataContext_t data_context;
 BocContext_t boc_context;
 
 void reset_app_context() {
-    os_memset(&data_context, 0, sizeof(data_context));
-    os_memset(&boc_context, 0, sizeof(boc_context));
+    memset(&data_context, 0, sizeof(data_context));
+    memset(&boc_context, 0, sizeof(boc_context));
 }
 
 void handleApdu(volatile unsigned int *flags, volatile unsigned int *tx) {
@@ -168,7 +168,7 @@ void io_seproxyhal_display(const bagl_element_t *element) {
     io_seproxyhal_display_default((bagl_element_t*)element);
 }
 
-unsigned char io_event(unsigned char channel) {
+unsigned char io_event(unsigned char channel __attribute__((unused))) {
     // nothing done with the event, throw an error on the transport layer if
     // needed
 

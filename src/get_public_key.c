@@ -7,7 +7,7 @@
 static uint8_t set_result_get_public_key() {
     uint8_t tx = 0;
     G_io_apdu_buffer[tx++] = PUBLIC_KEY_LENGTH;
-    os_memmove(G_io_apdu_buffer + tx, data_context.pk_context.public_key, PUBLIC_KEY_LENGTH);
+    memcpy(G_io_apdu_buffer + tx, data_context.pk_context.public_key, PUBLIC_KEY_LENGTH);
     tx += PUBLIC_KEY_LENGTH;
     return tx;
 }

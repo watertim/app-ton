@@ -63,7 +63,7 @@ void deserialize_amount(struct SliceData_t* slice, uint8_t* cell_data, uint8_t c
 
     uint16_t offset = SliceData_get_cursor(slice);
     uint8_t amount[MAX_AMOUNT_LENGTH];
-    os_memset(amount, 0, sizeof(amount));
+    memset(amount, 0, sizeof(amount));
     deserialize_array(cell_data, cell_data_size, offset, amount_length, amount);
     SliceData_move_by(slice, amount_length * 8);
 
@@ -103,5 +103,5 @@ void deserialize_message(struct ByteStream_t* src, uint8_t display_flags) {
         Cell_get_hash(&cells[i], i);
     }
 
-    os_memcpy(data_context.sign_tm_context.to_sign, Cell_get_hash(cells, 0), HASH_SIZE);
+    memcpy(data_context.sign_tm_context.to_sign, Cell_get_hash(cells, 0), HASH_SIZE);
 }

@@ -13,14 +13,14 @@ static uint8_t set_result_sign_transfer_msg() {
             get_private_key(context->account_number, &privateKey);
             cx_eddsa_sign(&privateKey, CX_LAST, CX_SHA512, context->to_sign, TO_SIGN_LENGTH, NULL, 0, context->hash, SIGN_LENGTH, NULL);
         } FINALLY {
-            os_memset(&privateKey, 0, sizeof(privateKey));
+            explicit_bzero(&privateKey, sizeof(privateKey));
         }
     }
     END_TRY;
 
     uint8_t tx = 0;
     G_io_apdu_buffer[tx++] = SIGN_LENGTH;
-    os_memmove(G_io_apdu_buffer + tx, context->hash, SIGN_LENGTH);
+    memcpy(G_io_apdu_buffer + tx, context->hash, SIGN_LENGTH);
     tx += SIGN_LENGTH;
     return tx;
 }
@@ -74,6 +74,7 @@ UX_FLOW(ux_sign_transfer_msg_flow,
 );
 
 void handleSignTransferMsg(uint8_t p1, uint8_t p2, uint8_t *dataBuffer, uint16_t dataLength, volatile unsigned int *flags, volatile unsigned int *tx) {
+    UNUSED(tx);
     VALIDATE(p2 == 0 && dataLength > sizeof(uint32_t), ERR_INVALID_REQUEST);
     SignTransferMsgContext_t* context = &data_context.sign_tm_context;
 

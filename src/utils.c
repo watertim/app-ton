@@ -16,7 +16,7 @@ void get_public_key(uint32_t account_number, uint8_t* publicKeyArray) {
             cx_ecfp_generate_pair(CX_CURVE_Ed25519, &publicKey, &privateKey, 1);
             io_seproxyhal_io_heartbeat();
         } FINALLY {
-            os_memset(&privateKey, 0, sizeof(privateKey));
+            explicit_bzero(&privateKey, sizeof(privateKey));
         }
     }
     END_TRY;
@@ -52,7 +52,7 @@ void get_private_key(uint32_t account_number, cx_ecfp_private_key_t *privateKey)
             cx_ecfp_init_private_key(CX_CURVE_Ed25519, privateKeyData, 32, privateKey);
             io_seproxyhal_io_heartbeat();
         } FINALLY {
-            os_memset(privateKeyData, 0, sizeof(privateKeyData));
+            explicit_bzero(privateKeyData, sizeof(privateKeyData));
         }
     }
     END_TRY;
