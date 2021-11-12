@@ -1,18 +1,4 @@
-# shellcheck disable=SC1091,SC2155
-
-# SOURCE THIS FILE
-# . prepare-devenv s|x
-
-if [ $# -ne 1 ]; then
-    echo "Possible options: s or x"
-    exit 1
-elif [[ $1 == "-h" ]]; then
-    echo "Possible options: s or x"
-    exit 1
-elif [[ $1 != "s" ]] && [[ $1 != "x" ]]; then
-    echo "Possible options: blue, s or x"
-    exit 1
-fi
+#!/bin/bash
 
 if [[ $(dpkg-query -s python3-venv 2>&1) == *'is not installed'* ]]; then
     printf "\nPackage python3-venv is missing.\nOn Debian-like distros, run:\n\napt install python3-venv\n\n"
@@ -25,43 +11,38 @@ if [[ $(cat /etc/udev/rules.d/20-hw1.rules) == *'ATTRS{idVendor}=="2c97", ATTRS{
 fi
 
 
-mkdir dev-env &&
-mkdir dev-env/SDK &&
-mkdir dev-env/CC &&
-mkdir dev-env/CC/others &&
-mkdir dev-env/CC/nanox &&
+mkdir tmp
+mkdir dev-env
+mkdir dev-env/SDK
+mkdir dev-env/CC
+mkdir dev-env/CC/others
+mkdir dev-env/CC/nanox
 
-wget https://launchpad.net/gcc-arm-embedded/5.0/5-2016-q1-update/+download/gcc-arm-none-eabi-5_3-2016q1-20160330-linux.tar.bz2 &&
-tar xf gcc-arm-none-eabi-5_3-2016q1-20160330-linux.tar.bz2 &&
-rm gcc-arm-none-eabi-5_3-2016q1-20160330-linux.tar.bz2 &&
-cp -r gcc-arm-none-eabi-5_3-2016q1 dev-env/CC/nanox/gcc-arm-none-eabi-5_3-2016q1 &&
-mv gcc-arm-none-eabi-5_3-2016q1 dev-env/CC/others/gcc-arm-none-eabi-5_3-2016q1 &&
+cd tmp
+
+wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 -O gcc-arm-none-eabi.tar.bz2 &&
+tar xf gcc-arm-none-eabi.tar.bz2 &&
+cp -r gcc-arm-none-eabi-10-2020-q4-major ../dev-env/CC/nanox/gcc-arm-none-eabi-10 &&
+mv gcc-arm-none-eabi-10-2020-q4-major ../dev-env/CC/others/gcc-arm-none-eabi-10
 
 wget http://releases.llvm.org/4.0.0/clang+llvm-4.0.0-x86_64-linux-gnu-ubuntu-16.10.tar.xz -O clang+llvm.tar.xz &&
 tar xf clang+llvm.tar.xz &&
-rm clang+llvm.tar.xz &&
-mv clang+llvm-4.0.0-x86_64-linux-gnu-ubuntu-16.10 dev-env/CC/others/clang-arm-fropi &&
+mv clang+llvm-4.0.0-x86_64-linux-gnu-ubuntu-16.10 ../dev-env/CC/others/clang-arm-fropi
 
-wget http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz -O clang+llvm.tar.xz &&
+wget http://releases.llvm.org/9.0.0/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz -O clang+llvm.tar.xz &&
 tar xf clang+llvm.tar.xz &&
-rm clang+llvm.tar.xz &&
-mv clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04 dev-env/CC/nanox/clang-arm-fropi &&
+mv clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-16.04 ../dev-env/CC/nanox/clang-arm-fropi
 
-wget https://github.com/LedgerHQ/nanos-secure-sdk/archive/nanos-160.tar.gz -O nanos-secure-sdk.tar.gz &&
+wget https://github.com/LedgerHQ/nanos-secure-sdk/archive/refs/tags/2.0.0-1.tar.gz -O nanos-secure-sdk.tar.gz &&
 tar xf nanos-secure-sdk.tar.gz &&
-rm nanos-secure-sdk.tar.gz &&
-mv nanos-secure-sdk-nanos-160 dev-env/SDK/nanos-secure-sdk &&
+mv nanos-secure-sdk-2.0.0-1 ../dev-env/SDK/nanos-secure-sdk
+
+wget https://github.com/LedgerHQ/nanox-secure-sdk/archive/refs/tags/2.0.0.tar.gz -O nanox-secure-sdk.tar.gz &&
+tar xf nanox-secure-sdk.tar.gz &&
+mv nanox-secure-sdk-2.0.0 ../dev-env/SDK/nanox-secure-sdk
+
+cd ..
 
 python3 -m venv dev-env/ledger_py3 &&
 source dev-env/ledger_py3/bin/activate &&
-pip install -r requirements.txt &&
-
-source dev-env/ledger_py3/bin/activate &&
-
-if [[ $1 == "s" ]]; then
-    export BOLOS_SDK=$(pwd)/dev-env/SDK/nanos-secure-sdk
-    export BOLOS_ENV=$(pwd)/dev-env/CC/others
-elif [[ $1 == "x" ]]; then
-    export BOLOS_SDK=$(pwd)/dev-env/SDK/nanox-secure-sdk
-    export BOLOS_ENV=$(pwd)/dev-env/CC/nanox
-fi
+pip3 install -r requirements.txt
