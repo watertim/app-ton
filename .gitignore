@@ -16,3 +16,5 @@ toncoin.js
 toncoin.py
 tmp/
 add_udev_rules.sh
+Pipfile
+Pipfile.lock
